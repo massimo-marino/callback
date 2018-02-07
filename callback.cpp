@@ -1,0 +1,12 @@
+//
+// callback.cpp
+//
+// Created by massimo on 2/5/18.
+//
+
+#include "callback.h"
+////////////////////////////////////////////////////////////////////////////////
+namespace callback
+{
+
+}  // namespace callback
