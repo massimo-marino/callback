@@ -49,7 +49,7 @@ private:
 };  // class callback
 
 template <typename CBFUN>
-CBFUN callback<CBFUN>::defaultCallbackFun_{[]() -> void {}};
+CBFUN callback<CBFUN>::defaultCallbackFun_ = []() -> void {};
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -101,6 +101,6 @@ private:
 };  // class callbackWithPrologue
 
 template <typename CBFUN>
-CBFUN callbackWithPrologue<CBFUN>::defaultCallbackFun_{[]() -> void {}};
+CBFUN callbackWithPrologue<CBFUN>::defaultCallbackFun_ = []() -> void {};
 
 }  // namespace callback
