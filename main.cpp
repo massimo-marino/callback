@@ -6,7 +6,7 @@
 
 static void testCallback ()
 {
-  auto l = []() {
+  std::function<void()> l = []() -> void {
     LMSG("Ciao Ciao");
   };
   callback::callback<std::function<void()>> cb{};
