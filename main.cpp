@@ -31,7 +31,6 @@ static void testCallback ()
   std::function<int()> aFun = [m]() -> int {
     auto value{m * 10};
     LMSG(m << " * 10 = " << value);
-    //std::cout << m << " * 10 = " << value << std::endl;
     return value;
   };
   callback::callback<decltype(aFun)> cb3{nullptr, aFun, nullptr};
