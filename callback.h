@@ -18,13 +18,38 @@ class callback final {
 
 public:
 
-  callback() = default;
+  explicit callback() noexcept(false)
+  {
+    prologueFun_();
+  }
 
-  explicit callback(CBFUN cbFun) noexcept(true) :
-          callbackFun_(cbFun)
-  {}
+  explicit callback(CBFUN prologueFun,
+                    CBFUN callbackFun,
+                    CBFUN epilogueFun) noexcept(false) :
+          prologueFun_(prologueFun),
+          callbackFun_(callbackFun),
+          epilogueFun_(epilogueFun)
+  {
+    if ( prologueFun_ )
+    {
+      prologueFun_();
+    }
+    // add an else block if needed
+    // else { ... }
+  }
 
   ~callback() noexcept(false)
+  {
+    if ( epilogueFun_ )
+    {
+      epilogueFun_();
+    }
+    // add an else block if needed
+    // else { ... }
+  }
+
+  void
+  operator ()() noexcept(false)
   {
     if ( callbackFun_ )
     {
@@ -45,62 +70,12 @@ private:
 
   static CBFUN defaultCallbackFun_;
 
+  CBFUN prologueFun_ {defaultCallbackFun_};
   CBFUN callbackFun_ {defaultCallbackFun_};
+  CBFUN epilogueFun_ {defaultCallbackFun_};
 };  // class callback
 
 template <typename CBFUN>
-CBFUN callback<CBFUN>::defaultCallbackFun_ = []() -> void {};
-
-////////////////////////////////////////////////////////////////////////////////
-
-template <typename CBFUN = cbfun_t>
-class callbackWithPrologue final {
-
-public:
-
-  explicit callbackWithPrologue() noexcept(false)
-  {
-    prologueFun_();
-  }
-
-  explicit callbackWithPrologue(CBFUN prologueFun, CBFUN cbFun) noexcept(false) :
-          prologueFun_(prologueFun),
-          callbackFun_(cbFun)
-  {
-    if ( prologueFun_ )
-    {
-      prologueFun_();
-    }
-    // add an else block if needed
-    // else { ... }
-  }
-
-  ~callbackWithPrologue() noexcept(false)
-  {
-    if ( callbackFun_ )
-    {
-      callbackFun_();
-    }
-    // add an else block if needed
-    // else { ... }
-  }
-
-  // forbid all these operations
-  callbackWithPrologue(const callbackWithPrologue &rhs) = delete;
-  callbackWithPrologue &operator=(const callbackWithPrologue &rhs) = delete;
-  callbackWithPrologue(callbackWithPrologue &&rhs) = delete;
-  callbackWithPrologue &operator=(callbackWithPrologue &&rhs) = delete;
-  void *operator new(std::size_t) = delete;
-
-private:
-
-  static CBFUN defaultCallbackFun_;
-
-  CBFUN prologueFun_ {defaultCallbackFun_};
-  CBFUN callbackFun_ {defaultCallbackFun_};
-};  // class callbackWithPrologue
-
-template <typename CBFUN>
-CBFUN callbackWithPrologue<CBFUN>::defaultCallbackFun_ = []() -> void {};
+CBFUN callback<CBFUN>::defaultCallbackFun_ = []() noexcept(true) -> void {};
 
 }  // namespace callback

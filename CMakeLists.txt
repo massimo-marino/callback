@@ -171,5 +171,5 @@ MESSAGE( STATUS )
 
 # ------------------------- End of Generic CMake Variable Logging ------------------
 
-add_executable(callback main.cpp main.h callback.cpp callback.h)
+add_executable(callback main.cpp main.h callback.h)
 

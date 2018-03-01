@@ -10,7 +10,10 @@ static void testCallback ()
     LMSG("Ciao Ciao");
   };
   callback::callback<std::function<void()>> cb{};
-  callback::callback<decltype(l)> cb2{l};
+  cb();
+
+  callback::callback<decltype(l)> cb2{l, nullptr, nullptr};
+  cb2();
 
   std::function<void()> prologueFun = []() -> void {
     LMSG("Prologue");
@@ -18,19 +21,28 @@ static void testCallback ()
   std::function<void()> cbFun = []() -> void {
     LMSG("Callback");
   };
-  callback::callbackWithPrologue<decltype(cbFun)> cbp(prologueFun, cbFun);
+  std::function<void()> epilogueFun = []() -> void {
+    LMSG("Epilogue");
+  };
+  callback::callback<decltype(cbFun)> cbp(prologueFun, cbFun, epilogueFun);
+  cbp();
 
   int m{100};
   std::function<int()> aFun = [m]() -> int {
     auto value{m * 10};
-    std::cout << m << " * 10 = " << value << std::endl;
+    LMSG(m << " * 10 = " << value);
+    //std::cout << m << " * 10 = " << value << std::endl;
     return value;
   };
-  callback::callback<decltype(aFun)> cb3{aFun};
+  callback::callback<decltype(aFun)> cb3{nullptr, aFun, nullptr};
+  cb3();
 
   std::function<void()> nullFun{nullptr};
-  callback::callback<decltype(nullFun)> cb4{nullFun};
-  callback::callbackWithPrologue<decltype(nullFun)> cb5{nullFun, nullFun};
+  callback::callback<decltype(nullFun)> cb4{nullptr, nullFun, nullptr};
+  cb4();
+
+  callback::callback<decltype(nullFun)> cb5{nullFun, nullFun, nullFun};
+  cb5();
 }
 
 // main
